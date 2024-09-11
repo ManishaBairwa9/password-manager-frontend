@@ -13,7 +13,7 @@ module.exports = {
       },
       backgroundImage: {
         'custom-pattern': "url('./imageforbg.png')",
-        'logo' : "url('./passwordlogo.png')",
+        'logo': "url('./passwordlogo.png')",
       },
     },
   },
