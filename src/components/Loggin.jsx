@@ -34,39 +34,41 @@ const Login = ({ setToken }) => {
     
 
     return (
-<div className="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-md">
-    <h2 className="text-2xl font-bold text-center text-red-600 mb-4">Login</h2>
-    <form onSubmit={handleLogin} className="space-y-4">
+<div className="w-80 md:w-[24rem] px-10 py-8 md:px-12 md:py-auto bg-white rounded-lg shadow-custom overflow-hidden font-outfit">
+    <h2 className="text-2xl font-semibold text-center text-[#001752] mb-10">Login</h2>
+    <form onSubmit={handleLogin}>
         <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email:</label>
+            
             <input
                 id="email"
                 type="email"
+                placeholder='email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                className="mt-6 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-gray-500 sm:text-sm font-outfi"
             />
         </div>
         <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password:</label>
+       
             <input
                 id="password"
                 type="password"
+                placeholder='password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                className="mt-6 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-gray-500 sm:text-sm font-outfi"
             />
         </div>
         <button
             type="submit"
-            className="w-full px-4 py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+            className="mt-10 w-full px-4 py-2 bg-[#001752] text-white font-semibold rounded-lg shadow-md hover:bg-[#182f6a] font-outfi"
         >
             Login
         </button>
     </form>
-    {message && <p className="mt-4 text-center text-red-600">{message}</p>}
+    {message && <p className="mt-4 text-center text-[#001752]">{message}</p>}
 </div>
 
     );

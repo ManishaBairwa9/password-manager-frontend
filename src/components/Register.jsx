@@ -28,6 +28,9 @@ const Register = () => {
                 status: 'success',
                 messageText: 'Registration Successful'
             });
+
+
+
         } catch (error) {
             // Update message state on registration failure
             setMessage({
@@ -39,45 +42,47 @@ const Register = () => {
     
 
     return (
-    <div className="max-w-sm mx-auto p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-blue-600 mb-4">Register</h2>
+    <div className="w-80 md:w-[24rem] px-10 py-8 md:px-12 md:py-auto bg-white rounded-lg shadow-custom overflow-hidden font-outfit">
+
+        <h2 className="text-2xl font-semibold text-center text-[#001752] mb-10">Register</h2>
         
-        {message && (
+          {/* {message && (
             <div className={`mb-4 p-4 rounded-lg text-white ${message.status === 'error' ? 'bg-red-600' : 'bg-green-600'}`}>
                 {message.messageText}
             </div>
-        )}
+        )} */}
         
-        <form onSubmit={handleRegister} className="space-y-4">
+        <form onSubmit={handleRegister}>
             <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email:</label>
                 <input
                     id="email"
                     type="email"
+                    placeholder='email'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="mt-6 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-gray-500 sm:text-sm"
                 />
             </div>
             <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password:</label>
                 <input
                     id="password"
                     type="password"
+                    placeholder='password'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    className="mt-6 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-gray-500 sm:text-sm"
                 />
             </div>
             <button
                 type="submit"
-                className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                className="mt-10 w-full px-4 py-2 bg-[#001752] text-white font-semibold rounded-lg shadow-md hover:bg-[#182f6a] focus:outline-none"
             >
-                Register
+                Sign Up
             </button>
         </form>
+        {message && <p className="mt-4 text-center text-[#001752]">{message}</p>}
     </div>
 
     );
