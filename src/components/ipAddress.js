@@ -16,7 +16,7 @@ const IPAddressManager = ({ userId, token }) => {
   const navigate = useNavigate();
 
   const goToHome = () => {
-    navigate('/'); // This will navigate to the root route
+    navigate('/credentials'); // This will navigate to the root route
   };
 
   const [isChecked, setIsChecked] = useState(false); // Initial state

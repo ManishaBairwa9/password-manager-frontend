@@ -17,7 +17,7 @@ const Register = () => {
             const ip = ipResponse.data.ip;
     
             // Make the POST request with email, password, and IP address
-            await axios.post('http://34.226.136.144:3000/api/auth/register', {
+            await axios.post('http://localhost:3000/api/auth/register', {
                 email,
                 password,
                 ip

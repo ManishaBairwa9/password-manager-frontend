@@ -17,7 +17,7 @@ const Login = ({ setToken }) => {
             const ip = ipResponse.data.ip;
     
             // Make the POST request with email, password, and IP address
-            const response = await axios.post('http://34.226.136.144:3000/api/auth/login', {
+            const response = await axios.post('http://localhost:3000/api/auth/login', {
                 email,
                 password,
                 ip
