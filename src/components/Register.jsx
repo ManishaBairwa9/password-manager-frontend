@@ -82,7 +82,8 @@ const Register = () => {
                 Sign Up
             </button>
         </form>
-        {message && <p className="mt-4 text-center text-[#001752]">{message}</p>}
+        {message && <p className={`mt-4 text-center ${message.status === 'error' ? 'text-red-600' : 'text-green-600'}`}>{message.messageText}</p>}
+
     </div>
 
     );
