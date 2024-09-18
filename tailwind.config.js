@@ -14,6 +14,7 @@ module.exports = {
       backgroundImage: {
         'custom-pattern': "url('./imageforbg.png')",
         'logo': "url('./passwordlogo.png')",
+        'custom-gradient': 'linear-gradient(to right top, #051937, #001944, #00174f, #00155a, #000f64)',
       },
     },
   },
