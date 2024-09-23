@@ -14,7 +14,7 @@ const App = () => {
         setToken(localStorage.getItem('authToken'));
     }, []);
 
-    let loginText = "Not registered yet?"
+    let loginText = "Don't have an account?"
     let registerText = "Already have an account?"
 
     const handleSuccessfulRegistration = () => {
@@ -42,8 +42,16 @@ const App = () => {
                                 <Login setToken={setToken} />
                             )}
                         </div>
-                        <button onClick={handleSuccessfulRegistration} className='font-bold text-sky-800 pt-6'>
-                            {isRegistered ? loginText : registerText}
+                        <button onClick={handleSuccessfulRegistration} className='font-bold text-sky-800 pt-6 cursor-pointer'>
+                            {isRegistered ? (
+                                <>
+                                    {loginText} <h1 className='inline underline'>Register</h1>
+                                </>
+                            ) : (
+                                <>
+                                {registerText} <h1 className='inline underline'>Login</h1>
+                            </>
+                            )}
                         </button>
                     </div>
                 )

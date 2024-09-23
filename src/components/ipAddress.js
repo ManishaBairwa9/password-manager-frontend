@@ -1,11 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
+import { FaMoon, FaSun, } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+import { ReactComponent as UserIcon } from "../usericon.svg";
 
 const IPAddressManager = ({ userId, token }) => {
   const [ipAddresses, setIpAddresses] = useState([]);
   const [newIpAddress, setNewIpAddress] = useState('');
   const [error, setError] = useState('');
+  const [isVisible, setIsVisible] = useState(false); 
+  const [darkMode, setDarkMode] = useState(false);
   
+  const handleLogout = () => {
+    navigate("/");
+    window.location.reload();
+    localStorage.removeItem("authToken"); // Remove token from localStorage
+  };
+
+  const toggleVisibility = () => {
+    setIsVisible((prevState) => !prevState);
+  };
+
+  const handleToggle = () => {
+    setDarkMode((prevState) => !prevState);
+  };
+
+  const goToCredentails = () => {
+    navigate("/credentials");
+    window.location.reload();
+  }
+
   useEffect(() => {
     if(token){
     fetchIpAddresses();
@@ -147,7 +171,47 @@ const IPAddressManager = ({ userId, token }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+    <>
+    <div className="backdrop-blur-lg flex justify-between items-center h-16 px-6 md:h-16 md:px-16 lg:h-20 lg:px-24 fixed top-0 w-screen z-50">
+        <div className="w-[40px] h-[44px] bg-logo bg-cover"></div>
+
+        <div className="flex items-center gap-2 md:gap-8 justify-center">
+          {darkMode && (
+            <button onClick={handleToggle} title="dark theme">
+              <FaMoon className="text-white" size={26} />
+            </button>
+          )}
+          {!darkMode && (
+            <button onClick={handleToggle} title="light theme">
+              <FaSun className="text-white" size={26}/>
+            </button>
+          )}
+
+<div className="relative flex items-center justify-center">
+            <UserIcon onClick={toggleVisibility} className="w-10" />
+            {isVisible && (
+              <div className="absolute top-16 flex gap-4 flex-col items-center">
+                <button
+                  className="rounded-full border-2 border-gray-400 p-3 bg-white bg-opacity-10"
+                  title="logout"
+                  onClick={handleLogout}
+                >
+                  <FiLogOut className="text-white"/>
+                </button>
+                <button
+                title="IP Manager"
+                  className="rounded-full border-2 text-white border-gray-400 px-3 py-2 bg-white bg-opacity-10 text-nowrap"
+                  onClick={goToCredentails}
+                >
+                  CR
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="min-h-screen bg-[#00021B] px-4 md:px-32 py-2 md:py-8 text-white max-w-full overflow-x-hidden">
+    <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg overflow-hidden h-full mt-20">
       <div className="px-6 py-4 flex justify-between align-middle bg-gray-100 border-b border-gray-200">
         <h2 className="text-xl font-semibold text-gray-800">IP Address Manager</h2>
 
@@ -226,6 +290,8 @@ const IPAddressManager = ({ userId, token }) => {
         </div>
       </div>
     </div>
+    </div>
+    </>
   );
 };
 

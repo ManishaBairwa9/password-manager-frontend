@@ -2,106 +2,105 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaMoon, FaSun, FaTrash, FaPen } from "react-icons/fa";
 import { FiEdit, FiTrash, FiLogOut } from "react-icons/fi";
+// import { LuCopy } from "react-icons/lu";
+// import { VscEye } from "react-icons/vsc";
+// import { CgEye } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { ReactComponent as UserIcon } from "../usericon.svg";
-import { ReactComponent as ThemeToggle } from "../themetoggle.svg";
 import { FaPlus } from "react-icons/fa6";
-import { LuCopy } from "react-icons/lu";
 import { IoCopy } from "react-icons/io5";
 import { TbEyeClosed } from "react-icons/tb";
-import { VscEye } from "react-icons/vsc";
-import { CgEye } from "react-icons/cg";
-import { MdRemoveRedEye } from "react-icons/md"; //filled eye
+import { MdRemoveRedEye, MdOutlineClose } from "react-icons/md"; //filled eye
+import greenCheckGif from "../greencheck.gif";
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Input from '@mui/joy/Input';
+
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
+  maxWidth: '400px',
+  maxHeight:'90vh',
   p: 4,
+  width: '100%',
 };
+
 
 const Credentials = ({ token }) => {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [password, setPassword] = useState("");
-  const [credentials, setCredentials] = useState([
-    {
-      id: 1,
-      name: "Google",
-      link: "https://www.google.com",
-      password: "password123",
-    },
-    {
-      id: 2,
-      name: "Facebook",
-      link: "https://www.facebook.com",
-      password: "mysecretpass",
-    },
-    {
-      id: 3,
-      name: "GitHub",
-      link: "https://www.github.com",
-      password: "gitpass456",
-    },
-    {
-      id: 4,
-      name: "Figma",
-      link: "https://www.figma.com",
-      password: "gitpass456",
-    },
-    {
-      id: 5,
-      name: "React",
-      link: "https://www.figma.com",
-      password: "gitpass456",
-    },
-    {
-      id: 5,
-      name: "React",
-      link: "https://www.figma.com",
-      password: "gitpass456",
-    },
-    {
-      id: 5,
-      name: "React",
-      link: "https://www.figma.com",
-      password: "gitpass456",
-    },
-    {
-      id: 5,
-      name: "React",
-      link: "https://www.figma.com",
-      password: "gitpass456",
-    },
-    {
-      id: 5,
-      name: "React",
-      link: "https://www.figma.com",
-      password: "gitpass456",
-    },
-    {
-      id: 5,
-      name: "React",
-      link: "https://react-icons.github.io/react-icons/search/#q=",
-      password: "gitpass456",
-    },
-  ]);
+  let [credentials, setCredentials] = useState([]);
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [visiblePasswords, setVisiblePasswords] = useState({});
   const [copiedId, setCopiedId] = useState(null);
   const [open, setOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);  //for user icon button when clicked the logout and ip button will be seen.
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const [toggleModalPassword, setToggleModalPassword] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [showcheck, setShowCheck] = useState(false);
+ 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+
+   // State to track the input value and filtered credentials
+   const [searchTerm, setSearchTerm] = useState(''); // Track search input
+   const [filteredCredentials, setFilteredCredentials] = useState(credentials); // Store filtered credentials
+   
+   // Function to handle input change and filter the credentials
+   const handleInputChange = (e) => {
+     const value = e.target.value;
+     setSearchTerm(value);
+   
+     if (value.length < 1) {
+       // Reset credentials to original if search term is empty
+       setFilteredCredentials(credentials);
+     } else {
+       // Filter credentials based on the input value
+       const filtered = credentials.filter((cred) =>
+         cred.name.toLowerCase().includes(value.toLowerCase())
+       );
+       setFilteredCredentials(filtered);
+     }
+   };
+   
+  
+ 
+  const openSnackbar = () => {
+    setSnackbarOpen(true);
+  };
+
+  const closeSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarOpen(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={closeSnackbar}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+
+  const handleModalPassword = () => {
+    setToggleModalPassword(prevState => !prevState);
+  }
 
   const handleTheme = () => {
     setDarkMode(!darkMode);
@@ -131,11 +130,13 @@ const Credentials = ({ token }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setCredentials(response.data);
+      setCredentials(response.data.data);
+      setFilteredCredentials(response.data.data)
       setError("");
     } catch (error) {
       console.error("Error fetching credentials:", error);
       setError("Failed to fetch credentials.");
+      handleLogout();
     }
   };
 
@@ -154,6 +155,8 @@ const Credentials = ({ token }) => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        openSnackbar();
+        setSnackbarMessage("Successfully Updated!");
       } else {
         await axios.post(
           "http://localhost:3000/api/credentials",
@@ -166,6 +169,8 @@ const Credentials = ({ token }) => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+        openSnackbar();
+        setSnackbarMessage("Successfully Added!");
       }
       setName("");
       setLink("");
@@ -173,6 +178,9 @@ const Credentials = ({ token }) => {
       setEditingId(null);
       fetchCredentials();
       setError("");
+      handleClose();
+      setShowCheck(prevState => !prevState);
+
     } catch (error) {
       console.error("Error adding/updating credential:", error);
       setError("Failed to add/update credential.");
@@ -193,6 +201,8 @@ const Credentials = ({ token }) => {
       });
       fetchCredentials();
       setError("");
+      openSnackbar();
+      setSnackbarMessage("Successfully Deleted!");
     } catch (error) {
       console.error("Error deleting credential:", error);
       setError("Failed to delete credential.");
@@ -204,8 +214,7 @@ const Credentials = ({ token }) => {
       const url = new URL(link);
       return `https://www.google.com/s2/favicons?domain=${url.hostname}`;
     } catch (error) {
-      console.error("Invalid URL:", error);
-      return null;
+      return `https://japannetwork-test.s3.eu-north-1.amazonaws.com/internet.png`;
     }
   };
 
@@ -224,6 +233,8 @@ const Credentials = ({ token }) => {
       () => {
         setCopiedId(id);
         setTimeout(() => setCopiedId(null), 2000);
+        openSnackbar();
+        setSnackbarMessage("Copied");
       },
       (err) => {
         console.error("Could not copy text: ", err);
@@ -235,57 +246,85 @@ const Credentials = ({ token }) => {
     setIsVisible((prevState) => !prevState);
   };
 
+  
+
   return (
     <>
-      <div className="backdrop-blur-lg flex justify-between items-center h-16 px-6 md:h-16 md:px-16 lg:h-20 lg:px-24 fixed top-0 w-screen z-50">
+    {/* { showcheck && (<div className="absolute top-2/4 left-2/4">
+     <img src={greenCheckGif} alt="Green Check" />
+    </div>) } */}
+  <style>
+        {`
+          .MuiSnackbarContent-root {
+              background-color: darkgreen !important;
+          }
+
+          .MuiInput-root {
+              background-color: rgba(255, 255, 255, 0.05); 
+              color: white;
+              border: 1px solid rgba(255, 255, 255, 0.5);
+          }
+
+          input:: placeholder {
+            color: rgba(255, 255, 255, 0.5);
+          }
+
+          .MuiInput-root:focus {
+              border:2px solid rgba(255, 255, 255, 0.5);
+              outline: none;
+              color: white !important;
+          }
+        `}
+      </style>
+
+    <Snackbar
+        anchorOrigin={{ vertical:"bottom", horizontal:"center" }}
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={closeSnackbar}
+        message={snackbarMessage}
+        action={action}
+
+    />
+
+      <div className="backdrop-blur-lg flex justify-between items-center h-16 px-6 md:h-16 md:px-16 lg:h-20 lg:px-24 fixed top-0 w-screen z-50 pt-10 pb-8">
         <div className="w-[40px] h-[44px] bg-logo bg-cover"></div>
 
         <div className="flex items-center gap-2 md:gap-8 justify-center">
-          {/* <div>
-            <input
-              type="checkbox"
-              id="checkbox"
-              className="hidden"
-              checked={darkMode}
-              onChange={handleTheme}
-            />
-            <label
-              htmlFor="checkbox"
-              className="w-12 h-6 bg-black flex items-center justify-between p-1 rounded-full relative transform scale-150"
-            >
-              <FaMoon className="text-pink-500" />
-              <FaSun className="text-yellow-500" />
-              <div
-                className={`absolute w-4 h-4 bg-white rounded-full transition-transform duration-200 ${
-                  darkMode ? "transform translate-x-6" : ""
-                }`}
-              ></div>
-            </label>
-          </div> */}
-
+          <Input
+            color="success"
+            disabled={false}
+            placeholder="Search by name"
+            size="md"
+            variant="plain"
+            value={searchTerm}
+            onChange={handleInputChange} // Track keystrokes
+          />
           {darkMode && (
-            <button onClick={handleToggle}>
+            <button onClick={handleToggle} title="dark theme">
               <FaMoon className="text-white" size={26} />
             </button>
           )}
           {!darkMode && (
-            <button onClick={handleToggle}>
-              <FaSun className="text-white" size={26} />
+            <button onClick={handleToggle} title="light theme">
+              <FaSun className="text-white" size={26}/>
             </button>
           )}
 
           <div className="relative flex items-center justify-center">
-            <UserIcon onClick={toggleVisibility} className="w-10" />
+            <UserIcon onClick={toggleVisibility} className="w-10 cursor-pointer" />
             {isVisible && (
               <div className="absolute top-16 flex gap-4 flex-col items-center">
                 <button
-                  className="rounded-full border-2 border-gray-400 p-3 bg-white bg-opacity-10"
+                  className="rounded-full border-2 border-gray-400 p-3 bg-[#0D0F27]"
+                  title="logout"
                   onClick={handleLogout}
                 >
-                  <FiLogOut className="text-white" />
+                  <FiLogOut className="text-white"/>
                 </button>
                 <button
-                  className="rounded-full border-2 text-white border-gray-400 px-3 py-2 bg-white bg-opacity-10 text-nowrap"
+                title="IP Manager"
+                  className="rounded-full border-2 text-white border-gray-400 px-3 py-2 bg-[#0D0F27] text-nowrap"
                   onClick={goToip}
                 >
                   I P
@@ -295,20 +334,26 @@ const Credentials = ({ token }) => {
           </div>
         </div>
       </div>
-      <div className="min-h-screen bg-[#00021B] px-4 md:px-32 py-2 md:py-8 text-white max-w-full overflow-x-hidden">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mx-auto text-center pt-12 pb-20 font-outfit z-50 ">
-          We gaurd your passwords with <br></br>Unbreakable{" "}
-          <span className="text-[#63E400]">100%</span>, End-to-End Encryption.
+      <div className="min-h-screen bg-[#00021B] px-4 md:px-20 lg:px-32 py-2 md:py-8 text-white max-w-full overflow-x-hidden">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mx-auto text-center pt-24 pb-6 md:pt-12 md:pb-20 font-outfit z-50">
+          We gaurd your passwords with <br></br>Unbreakable,{" "}
+          <span className="text-[#63E400]">100%</span> End-to-End Encryption.
         </h1>
         <div className="flex justify-center items-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-4 justify-center items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-6 justify-center items-center w-full">
             {/* modal */}
             <div className="h-full">
               <div
-                onClick={handleOpen}
-                className="border-2 border-gray-600 border-dashed rounded-2xl cursor-pointer flex justify-center h-full hover:bg-white hover:bg-opacity-5 p-12 md:p-10"
+                onClick={() => {
+                  handleOpen();
+                  setName("");
+                  setLink("");
+                  setPassword("");
+                  setEditingId(null);
+                }}
+                className="border-2 border-gray-600 border-dashed rounded-2xl cursor-pointer flex justify-center h-full hover:bg-white hover:bg-opacity-5 hover:border-gray-500 p-12 md:p-10"
               >
-                <div className="text-base md:text-2xl font-medium text-white text-nowrap flex flex-row items-center gap-4 font-outfit normal-case">
+                <div className="text-base md:text-2xl font-medium text-white text-nowrap flex flex-row items-center gap-4 font-outfit normal-case" title="add a new password" >
                   Add new <FaPlus />
                 </div>
               </div>
@@ -318,26 +363,29 @@ const Credentials = ({ token }) => {
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
+                className="backdrop-blur-lg"
               >
                 <Box
                   sx={style}
-                  className="shadow-custom !bg-white backdrop-blur-lg !bg-opacity-20 !border-none !outline-none"
+                  className="!bg-[#0D0F27] backdrop-blur-2xl border-slate-500 border-2 border-opacity-25 outline-none rounded-3xl absolute top-2/4 left-2/4"
                 >
-                  <div className="py-8 text-base leading-6 space-y-4  sm:text-lg sm:leading-7">
+                  <MdOutlineClose className="text-slate-400 hover:text-white absolute top-5 right-5 scale-110 hover:scale-150 transition-transform duration-600 ease-in-out cursor-pointer" onClick={handleClose}/>
+                  
+                  <div className="my-6 text-base sm:text-lg">
                     <Typography
                       id="modal-modal-title"
                       variant="h6"
                       component="h2"
-                      className="text-xl font-bold mb-4 text-white text-center"
+                      className="!text-2xl !font-outfit !font-semibold !mb-8 text-white text-center"
                     >
-                      {editingId ? "Edit" : "Add"} Credentials
+                    
+                      {editingId ? "Edit" : "Add"} {" "}<span className="text-[#63E400]">Credentials</span>
                     </Typography>
-
                     <form
                       onSubmit={handleAddOrUpdateCredential}
                       className="space-y-4"
                     >
-                      <div className="flex flex-col">
+                      <div className="flex flex-col gap-4 my-6">
                         <input
                           id="website name"
                           type="text"
@@ -346,11 +394,9 @@ const Credentials = ({ token }) => {
                           onChange={(e) => setName(e.target.value)}
                           required
                           autoComplete="off"
-                          className="mt-2 block w-full rounded-md shadow-sm py-2 px-3 focus:outline-gray-700 sm:text-sm bg-white bg-opacity-10 text-white"
+                          className="block w-full rounded-md shadow-sm py-2 px-3 border-2 border-opacity-60 border-gray-700 focus:border-gray-500 outline-none  sm:text-sm bg-[#00021B] text-white placeholder:text-slate-500"
                         />
-                      </div>
 
-                      <div className="flex flex-col">
                         <input
                           id="link"
                           type="text"
@@ -359,26 +405,32 @@ const Credentials = ({ token }) => {
                           onChange={(e) => setLink(e.target.value)}
                           required
                           autoComplete="one-time-code"
-                          className="mt-2 block w-full rounded-md shadow-sm py-2 px-3 focus:border-gray-300 sm:text-sm bg-white bg-opacity-10 text-white"
+                          className="block w-full rounded-md shadow-sm py-2 px-3 border-2 border-opacity-60 border-gray-700 focus:border-gray-500 outline-none  sm:text-sm bg-[#00021B] text-white placeholder:text-slate-500"
                         />
-                      </div>
-
-                      <div className="flex flex-col">
+                        <div className="relative">
                         <input
                           id="password"
-                          type="password"
+                          type={!toggleModalPassword ? "password" : "text"}
                           placeholder="password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           required
                           autoComplete="one-time-code"
-                          className="my-2 block w-full rounded-md shadow-sm py-2 px-3 focus:border-gray-300 sm:text-sm bg-none bg-white bg-opacity-10 text-white"
+                          className="block w-full rounded-md py-2 pl-3 pr-10 border-2 border-opacity-60 border-gray-700 focus:border-gray-500 outline-none  sm:text-sm bg-[#00021B] text-white placeholder:text-slate-500"
                         />
+                        
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                        <button type="button" onClick={(e) => { e.preventDefault(); handleModalPassword(); }}>
+  {!toggleModalPassword ? <MdRemoveRedEye size={18} className="text-slate-500" /> : <TbEyeClosed size={18} className="text-slate-500" />}
+</button>
+
+                        </div>
+                        </div>
                       </div>
 
                       <Button
                         type="submit"
-                        className="w-full flex justify-center py-2 px-4  !text-white !bg-[#63E400] !bg-opacity-50"
+                        className=" w-full flex justify-center py-2 px-4  !text-white hover:!bg-[#1c6307] !bg-[#409400] !border-2 !border-gray-600 !font-semibold"
                       >
                         {editingId ? "Update" : "Add"}
                       </Button>
@@ -393,22 +445,17 @@ const Credentials = ({ token }) => {
                 {error}
               </p>
             )}
-            {credentials.length > 0 ? (
-              credentials.map((credential) => (
+            {filteredCredentials.length > 0 ? (
+              filteredCredentials.map((credential) => (
                 <div
                   key={credential.id}
-                  className="overflow-hidden rounded-2xl bg-white hover:bg-opacity-10 border-opacity-60 px-6 py-5 relative bg-opacity-5 border-2 border-gray-600 hover:border-gray-400"
+                  className="overflow-hidden rounded-2xl bg-white border-opacity-60 pl-4 pr-9 py-6 relative bg-opacity-5 border-2 border-gray-700 hover:border-gray-600 min-h-32"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <img
                       src={getFaviconUrl(credential.link)}
                       alt="Favicon"
                       className="w-6 h-6 mr-2"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src =
-                          "https://www.google.com/s2/favicons?domain=example.com";
-                      }}
                     />
                     <h3 className="text-lg leading-6 font-medium ">
                       {credential.name}
@@ -418,6 +465,7 @@ const Credentials = ({ token }) => {
                     <a
                       href={credential.link}
                       target="_blank"
+                      title="click to open"
                       rel="noopener noreferrer"
                       className="text-[#71CDFF] hover:underline whitespace-nowrap overflow-hidden text-ellipsis"
                       style={{ display: "block" }}
@@ -437,20 +485,21 @@ const Credentials = ({ token }) => {
                     <div className="flex flex-col gap-2">
                       <button
                         onClick={() => togglePasswordVisibility(credential.id)}
-                        className="hover:text-white text-slate-600"
+                        className="hover:text-white text-slate-600  hover:scale-125 transition-transform duration-600 ease-in-out"
                       >
                         {visiblePasswords[credential.id] ? (
-                          <TbEyeClosed size={18} />
+                          <TbEyeClosed size={18} title="show password"/>
                         ) : (
-                          <MdRemoveRedEye size={18} />
+                          <MdRemoveRedEye size={18} title="hide password"/>
                         )}
                       </button>
                       <button
                         onClick={() => {
-                          setEditingId("update");
+                          setEditingId(credential.id);
+                          handleEdit(credential)
                           handleOpen();
                         }}
-                        className="hover:text-white text-slate-600  "
+                        className="hover:text-white text-slate-600 hover:scale-125 transition-transform duration-600 ease-in-out"
                         title="Edit"
                       >
                         <FaPen size={16} />
@@ -458,7 +507,7 @@ const Credentials = ({ token }) => {
 
                       <button
                         onClick={() => handleDelete(credential.id)}
-                        className="hover:text-white text-slate-600 "
+                        className="hover:text-white text-slate-600 hover:scale-125 transition-transform duration-600 ease-in-out"
                         title="Delete"
                       >
                         <FaTrash size={16} />
@@ -468,7 +517,7 @@ const Credentials = ({ token }) => {
                         onClick={() =>
                           copyToClipboard(credential.password, credential.id)
                         }
-                        className="hover:text-white text-slate-600"
+                        className="hover:text-white text-slate-600 hover:scale-125 transition-transform duration-600 ease-in-out"
                         title={copiedId === credential.id ? "Copied!" : "Copy"}
                       >
                         <IoCopy size={16} />
