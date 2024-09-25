@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaMoon, FaSun, FaTrash, FaPen } from "react-icons/fa";
-import { FiEdit, FiTrash, FiLogOut } from "react-icons/fi";
+import { FaMoon, FaSun, FaTrash, FaPen, FaSearch } from "react-icons/fa";
+import { FiEdit, FiTrash, FiLogOut, FiSearch } from "react-icons/fi";
 // import { LuCopy } from "react-icons/lu";
 // import { VscEye } from "react-icons/vsc";
 // import { CgEye } from "react-icons/cg";
@@ -23,8 +23,6 @@ import Input from '@mui/joy/Input';
 
 const style = {
   transform: "translate(-50%, -50%)",
-  maxWidth: '400px',
-  maxHeight:'90vh',
   p: 4,
   width: '100%',
 };
@@ -246,7 +244,7 @@ const Credentials = ({ token }) => {
     setIsVisible((prevState) => !prevState);
   };
 
-  
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
     <>
@@ -262,18 +260,27 @@ const Credentials = ({ token }) => {
           .MuiInput-root {
               background-color: rgba(255, 255, 255, 0.05); 
               color: white;
-              border: 1px solid rgba(255, 255, 255, 0.5);
+              border: 2px solid #374151;
+              border-radius: 2rem;
+              width: 12rem;
           }
 
-          input:: placeholder {
+          input::placeholder {
             color: rgba(255, 255, 255, 0.5);
           }
 
           .MuiInput-root:focus {
-              border:2px solid rgba(255, 255, 255, 0.5);
-              outline: none;
-              color: white !important;
+              outline: 2px solid rgba(255, 255, 255, 1) !important;
           }
+
+
+          .css-1hrwsh9-JoyInput-root:not([data-skip-inverted-colors]) {
+              --_Input-focusedHighlight: white !important;
+              --Input-focusedHighlight: black !important; 
+              padding: 0 1rem;
+          }
+
+
         `}
       </style>
 
@@ -290,16 +297,22 @@ const Credentials = ({ token }) => {
       <div className="backdrop-blur-lg flex justify-between items-center h-16 px-6 md:h-16 md:px-16 lg:h-20 lg:px-24 fixed top-0 w-screen z-50 pt-10 pb-8">
         <div className="w-[40px] h-[44px] bg-logo bg-cover"></div>
 
-        <div className="flex items-center gap-2 md:gap-8 justify-center">
-          <Input
+        <div className="flex items-center gap-4 md:gap-4 lg:gap-6 justify-center">
+         <div className="absolute left-1/2 transform -translate-x-1/2 lg:relative lg:left-auto lg:right-0 lg:translate-x-0 md:relative md:left-auto md:right-0 md:translate-x-0">
+         <Input
             color="success"
             disabled={false}
-            placeholder="Search by name"
+            placeholder={!isFocused && "Search"}
             size="md"
             variant="plain"
             value={searchTerm}
             onChange={handleInputChange} // Track keystrokes
+            onFocus={() => setIsFocused(true)} // Set focused to true
+            onBlur={() => setIsFocused(false)} // Set focused to false
+            startDecorator={!isFocused && <FiSearch className="text-white text-opacity-50" />}
           />
+         </div>
+          
           {darkMode && (
             <button onClick={handleToggle} title="dark theme">
               <FaMoon className="text-white" size={26} />
@@ -316,7 +329,7 @@ const Credentials = ({ token }) => {
             {isVisible && (
               <div className="absolute top-16 flex gap-4 flex-col items-center">
                 <button
-                  className="rounded-full border-2 border-gray-400 p-3 bg-[#0D0F27]"
+                  className="rounded-full border-2 border-gray-400 p-3 bg-[#0D0F27] hover:border-white"
                   title="logout"
                   onClick={handleLogout}
                 >
@@ -324,7 +337,7 @@ const Credentials = ({ token }) => {
                 </button>
                 <button
                 title="IP Manager"
-                  className="rounded-full border-2 text-white border-gray-400 px-3 py-2 bg-[#0D0F27] text-nowrap"
+                  className="rounded-full border-2 text-white border-gray-400 hover:border-white px-3 py-2 bg-[#0D0F27] text-nowrap"
                   onClick={goToip}
                 >
                   I P
@@ -334,9 +347,9 @@ const Credentials = ({ token }) => {
           </div>
         </div>
       </div>
-      <div className="min-h-screen bg-[#00021B] px-4 md:px-20 lg:px-32 py-2 md:py-8 text-white max-w-full overflow-x-hidden">
+      <div className="min-h-screen bg-[#00021B] px-6 md:px-20 lg:px-32 py-2 md:py-8 text-white max-w-full overflow-x-hidden">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mx-auto text-center pt-24 pb-6 md:pt-12 md:pb-20 font-outfit z-50">
-          We gaurd your passwords with <br></br>Unbreakable,{" "}
+          Guard your passwords with <br></br>Unbreakable,{" "}
           <span className="text-[#63E400]">100%</span> End-to-End Encryption.
         </h1>
         <div className="flex justify-center items-center">
@@ -351,9 +364,9 @@ const Credentials = ({ token }) => {
                   setPassword("");
                   setEditingId(null);
                 }}
-                className="border-2 border-gray-600 border-dashed rounded-2xl cursor-pointer flex justify-center h-full hover:bg-white hover:bg-opacity-5 hover:border-gray-500 p-12 md:p-10"
+                className="border-2 border-gray-600 border-dashed rounded-2xl cursor-pointer flex justify-center h-full hover:bg-white hover:bg-opacity-5 hover:border-gray-500 p-12 md:p-10 hover:scale-105 transition-transform duration-600 ease-in-out"
               >
-                <div className="text-base md:text-2xl font-medium text-white text-nowrap flex flex-row items-center gap-4 font-outfit normal-case" title="add a new password" >
+                <div className="text-base md:text-2xl font-medium text-white text-nowrap flex flex-row items-center gap-4 font-outfit normal-case " title="add a new password" >
                   Add new <FaPlus />
                 </div>
               </div>
@@ -367,7 +380,7 @@ const Credentials = ({ token }) => {
               >
                 <Box
                   sx={style}
-                  className="!bg-[#0D0F27] backdrop-blur-2xl border-slate-500 border-2 border-opacity-25 outline-none rounded-3xl absolute top-2/4 left-2/4"
+                  className="!bg-[#0D0F27] backdrop-blur-2xl border-slate-500 border-2 border-opacity-25 outline-none rounded-3xl absolute top-2/4 left-2/4 px-2 lg:px-0 max-w-[25rem] !overflow-hidden"
                 >
                   <MdOutlineClose className="text-slate-400 hover:text-white absolute top-5 right-5 scale-110 hover:scale-150 transition-transform duration-600 ease-in-out cursor-pointer" onClick={handleClose}/>
                   
@@ -394,7 +407,7 @@ const Credentials = ({ token }) => {
                           onChange={(e) => setName(e.target.value)}
                           required
                           autoComplete="off"
-                          className="block w-full rounded-md shadow-sm py-2 px-3 border-2 border-opacity-60 border-gray-700 focus:border-gray-500 outline-none  sm:text-sm bg-[#00021B] text-white placeholder:text-slate-500"
+                          className="block w-full rounded-md shadow-sm py-2 px-3 border-2 border-opacity-60 border-gray-700 focus:border-gray-500 sm:text-sm bg-[#00021B] text-white placeholder:text-slate-600"
                         />
 
                         <input
@@ -405,7 +418,7 @@ const Credentials = ({ token }) => {
                           onChange={(e) => setLink(e.target.value)}
                           required
                           autoComplete="one-time-code"
-                          className="block w-full rounded-md shadow-sm py-2 px-3 border-2 border-opacity-60 border-gray-700 focus:border-gray-500 outline-none  sm:text-sm bg-[#00021B] text-white placeholder:text-slate-500"
+                          className="block w-full rounded-md shadow-sm py-2 px-3 border-2 border-opacity-60 border-gray-700 sm:text-sm bg-[#00021B] text-white placeholder:text-slate-600"
                         />
                         <div className="relative">
                         <input
@@ -416,7 +429,7 @@ const Credentials = ({ token }) => {
                           onChange={(e) => setPassword(e.target.value)}
                           required
                           autoComplete="one-time-code"
-                          className="block w-full rounded-md py-2 pl-3 pr-10 border-2 border-opacity-60 border-gray-700 focus:border-gray-500 outline-none  sm:text-sm bg-[#00021B] text-white placeholder:text-slate-500"
+                          className="block w-full rounded-md py-2 pl-3 pr-10 border-2 border-opacity-60 border-gray-700 focus:border-gray-500 sm:text-sm bg-[#00021B] text-white placeholder:text-slate-600"
                         />
                         
                         <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -449,7 +462,7 @@ const Credentials = ({ token }) => {
               filteredCredentials.map((credential) => (
                 <div
                   key={credential.id}
-                  className="overflow-hidden rounded-2xl bg-white border-opacity-60 pl-4 pr-9 py-6 relative bg-opacity-5 border-2 border-gray-700 hover:border-gray-600 min-h-32"
+                  className="overflow-hidden rounded-2xl bg-white border-opacity-60 pl-5 pr-10 py-6 relative bg-opacity-5 border-2 border-gray-700 hover:border-gray-600 min-h-32 hover:scale-105 transition-transform duration-600 ease-in-out "
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <img
@@ -457,8 +470,8 @@ const Credentials = ({ token }) => {
                       alt="Favicon"
                       className="w-6 h-6 mr-2"
                     />
-                    <h3 className="text-lg leading-6 font-medium ">
-                      {credential.name}
+                    <h3 className="text-lg leading-6 font-medium whitespace-nowrap overflow-hidden text-ellipsis" style={{ display: "block" }}>
+                    {credential.name.charAt(0).toUpperCase() + credential.name.slice(1)}
                     </h3>
                   </div>
                   <p className="mt-2 max-w-2xl text-sm ">
@@ -478,7 +491,7 @@ const Credentials = ({ token }) => {
                     type={visiblePasswords[credential.id] ? "text" : "password"}
                     value={credential.password}
                     readOnly
-                    className="border-none bg-transparent mt-2"
+                    className="border-none bg-transparent mt-2 cursor-pointer outline-none"
                   />
 
                   <div className="absolute top-4 right-4">
@@ -488,9 +501,9 @@ const Credentials = ({ token }) => {
                         className="hover:text-white text-slate-600  hover:scale-125 transition-transform duration-600 ease-in-out"
                       >
                         {visiblePasswords[credential.id] ? (
-                          <TbEyeClosed size={18} title="show password"/>
+                          <TbEyeClosed size={18} title="hide password"/>
                         ) : (
-                          <MdRemoveRedEye size={18} title="hide password"/>
+                          <MdRemoveRedEye size={18} title="show password"/>
                         )}
                       </button>
                       <button

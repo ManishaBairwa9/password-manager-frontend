@@ -4,6 +4,7 @@ import Register from './components/Register';
 import Login from './components/Loggin';
 import Credentials from './components/Credentials';
 import IPAddressManager from './components/ipAddress';
+import RandomPasswordGenerator from './components/RandomPasswordGenerator';
 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -58,6 +59,7 @@ const App = () => {
             } />
             <Route path="/credentials" element={<Credentials token={token} />} />
             <Route path="/ip" element={<IPAddressManager token={token} />} />
+            <Route path="/generatepassword" element={<RandomPasswordGenerator />} />
         </Routes>
     </Router>
     );

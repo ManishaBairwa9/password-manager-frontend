@@ -49,7 +49,7 @@ const IPAddressManager = ({ userId, token }) => {
   // Function to fetch the current check value from the backend
   const fetchIpCheckStatus = async () => {
     try {
-      const response = await fetch('http://34.226.136.144:3000/api/ip/ipcheck', {
+      const response = await fetch('http://localhost:3000/api/ip/ipcheck', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const IPAddressManager = ({ userId, token }) => {
       }
 
       const data = await response.json();
-      setIsChecked(data.check === 1); // Set the checkbox state based on the check value
+      setIsChecked(data.data.check === 1); // Set the checkbox state based on the check value
     } catch (error) {
       console.error('Error:', error.message);
     }
@@ -75,7 +75,7 @@ const IPAddressManager = ({ userId, token }) => {
     }
 
     try {
-      const response = await fetch('http://34.226.136.144:3000/api/ip/ipcheck', {
+      const response = await fetch('http://localhost:3000/api/ip/ipcheck', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ const IPAddressManager = ({ userId, token }) => {
   // Fetch IP addresses from the server
   const fetchIpAddresses = async () => {
     try {
-      const response = await fetch(`http://34.226.136.144:3000/api/ip`, {  // Full URL for local dev
+      const response = await fetch(`http://localhost:3000/api/ip`, {  // Full URL for local dev
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -114,7 +114,7 @@ const IPAddressManager = ({ userId, token }) => {
         throw new Error('Failed to fetch IP addresses');
       }
       const data = await response.json();
-      setIpAddresses(data);
+      setIpAddresses(data.data);
       setError(''); // Clear any previous error
     } catch (error) {
       setError(error.message); // Show more specific error message
@@ -129,7 +129,7 @@ const IPAddressManager = ({ userId, token }) => {
     }
 
     try {
-      const response = await fetch(`http://34.226.136.144:3000/api/ip`, {  // Full URL for local dev
+      const response = await fetch(`http://localhost:3000/api/ip`, {  // Full URL for local dev
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ const IPAddressManager = ({ userId, token }) => {
   // Delete an IP address by ID
   const deleteIpAddress = async (id) => {
     try {
-      const response = await fetch(`http://34.226.136.144:3000/api/ip/${id}`, {  // Correct the DELETE URL
+      const response = await fetch(`http://localhost:3000/api/ip/${id}`, {  // Correct the DELETE URL
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -192,7 +192,7 @@ const IPAddressManager = ({ userId, token }) => {
             {isVisible && (
               <div className="absolute top-16 flex gap-4 flex-col items-center">
                 <button
-                  className="rounded-full border-2 border-gray-400 p-3 bg-white bg-opacity-10"
+                  className="rounded-full border-2 p-3 bg-white bg-opacity-10"
                   title="logout"
                   onClick={handleLogout}
                 >
@@ -200,7 +200,7 @@ const IPAddressManager = ({ userId, token }) => {
                 </button>
                 <button
                 title="IP Manager"
-                  className="rounded-full border-2 text-white border-gray-400 px-3 py-2 bg-white bg-opacity-10 text-nowrap"
+                  className="rounded-full border-2 text-white px-3 py-2 bg-white bg-opacity-10 text-nowrap"
                   onClick={goToCredentails}
                 >
                   CR
@@ -210,10 +210,10 @@ const IPAddressManager = ({ userId, token }) => {
           </div>
         </div>
       </div>
-      <div className="min-h-screen bg-[#00021B] px-4 md:px-32 py-2 md:py-8 text-white max-w-full overflow-x-hidden">
-    <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg overflow-hidden h-full mt-20">
-      <div className="px-6 py-4 flex justify-between align-middle bg-gray-100 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800">IP Address Manager</h2>
+  <div className="min-h-screen bg-[#00021B] px-4 md:px-32 py-2 md:py-8 text-white max-w-full overflow-x-hidden">
+    <div className="max-w-6xl mx-auto shadow-md rounded-lg overflow-hidden h-full mt-20">
+      <div className="px-6 py-4 flex justify-between align-middle  border-b ">
+        <h2 className="text-xl font-semibold text-white">IP Address Manager</h2>
 
         <div className='flex justify-between'>
         <label className="flex items-center space-x-2">
@@ -221,12 +221,12 @@ const IPAddressManager = ({ userId, token }) => {
           type="checkbox"
           checked={isChecked}
           onChange={handleCheckboxChange}
-          className="form-checkbox h-5 w-5 text-blue-600"
+          className="form-checkbox h-5 w-5 text-green-600"
         />
         <span> IP Bound Security</span>
       </label>
         <button
-          className="px-4 py-2 ml-2 bg-gray-400 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="px-4 py-2 ml-2 text-white rounded-md bg-[#00021B] hover:border-green-500 hover:border-opacity-100 border-2 border-opacity-0 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           onClick={goToHome}
         >
           Back
@@ -248,31 +248,31 @@ const IPAddressManager = ({ userId, token }) => {
             value={newIpAddress}
             onChange={(e) => setNewIpAddress(e.target.value)}
             placeholder="Enter IP address"
-            className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-grow px-3 py-2 border  bg-[#00021B] rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           <button
             onClick={addIpAddress}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="px-4 py-2 text-[#00021B] rounded-md bg-[#63e400] hover:border-green-500 hover:border-opacity-100 border-2 border-opacity-0 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
             Add IP
           </button>
         </div>
 
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y ">
+          <thead>
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
                 IP Address
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-right text-xs font-medium text-white uppercase tracking-wider">
                 Action
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="divide-y">
             {ipAddresses.map((ip) => (
               <tr key={ip.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ip.ip}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{ip.ip}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button
                     onClick={() => deleteIpAddress(ip.id)}
