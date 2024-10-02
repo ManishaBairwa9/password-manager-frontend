@@ -126,7 +126,7 @@ const Credentials = ({ token }) => {
   const fetchCredentials = async () => {
     try {
       const response = await axios.get(
-        "http://3.90.69.163:3000/api/credentials",
+        "http://3.86.112.165:3000/api/credentials",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -146,7 +146,7 @@ const Credentials = ({ token }) => {
     try {
       if (editingId) {
         await axios.put(
-          `http://3.90.69.163:3000/api/credentials/${editingId}`,
+          `http://3.86.112.165:3000/api/credentials/${editingId}`,
           {
             name,
             link,
@@ -160,7 +160,7 @@ const Credentials = ({ token }) => {
         setSnackbarMessage("Successfully Updated!");
       } else {
         await axios.post(
-          "http://3.90.69.163:3000/api/credentials",
+          "http://3.86.112.165:3000/api/credentials",
           {
             name,
             link,
@@ -196,7 +196,7 @@ const Credentials = ({ token }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://3.90.69.163:3000/api/credentials/${id}`, {
+      await axios.delete(`http://3.86.112.165:3000/api/credentials/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCredentials();

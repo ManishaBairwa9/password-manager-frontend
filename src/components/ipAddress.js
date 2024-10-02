@@ -51,7 +51,7 @@ const IPAddressManager = ({ userId, token }) => {
   // Function to fetch the current check value from the backend
   const fetchIpCheckStatus = async () => {
     try {
-      const response = await fetch('http://3.90.69.163:3000/api/ip/ipcheck', {
+      const response = await fetch('http://3.86.112.165:3000/api/ip/ipcheck', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const IPAddressManager = ({ userId, token }) => {
     }
 
     try {
-      const response = await fetch('http://3.90.69.163:3000/api/ip/ipcheck', {
+      const response = await fetch('http://3.86.112.165:3000/api/ip/ipcheck', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ const IPAddressManager = ({ userId, token }) => {
   // Fetch IP addresses from the server
   const fetchIpAddresses = async () => {
     try {
-      const response = await fetch(`http://3.90.69.163:3000/api/ip`, {  // Full URL for local dev
+      const response = await fetch(`http://3.86.112.165:3000/api/ip`, {  // Full URL for local dev
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -131,7 +131,7 @@ const IPAddressManager = ({ userId, token }) => {
     }
 
     try {
-      const response = await fetch(`http://3.90.69.163:3000/api/ip`, {  // Full URL for local dev
+      const response = await fetch(`http://3.86.112.165:3000/api/ip`, {  // Full URL for local dev
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -155,7 +155,7 @@ const IPAddressManager = ({ userId, token }) => {
   // Delete an IP address by ID
   const deleteIpAddress = async (id) => {
     try {
-      const response = await fetch(`http://3.90.69.163:3000/api/ip/${id}`, {  // Correct the DELETE URL
+      const response = await fetch(`http://3.86.112.165:3000/api/ip/${id}`, {  // Correct the DELETE URL
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
