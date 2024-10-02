@@ -34,13 +34,15 @@ const IPAddressManager = ({ userId, token }) => {
     if(token){
     fetchIpAddresses();
     fetchIpCheckStatus();
+    }else{
+      navigate("/");
     }
   }, [token]);
 
   const navigate = useNavigate();
 
   const goToHome = () => {
-    navigate('/credentials'); // This will navigate to the root route
+    navigate(''); // This will navigate to the root route
   };
 
   const [isChecked, setIsChecked] = useState(false); // Initial state
@@ -49,7 +51,7 @@ const IPAddressManager = ({ userId, token }) => {
   // Function to fetch the current check value from the backend
   const fetchIpCheckStatus = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/ip/ipcheck', {
+      const response = await fetch('http://3.90.69.163:3000/api/ip/ipcheck', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +77,7 @@ const IPAddressManager = ({ userId, token }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/ip/ipcheck', {
+      const response = await fetch('http://3.90.69.163:3000/api/ip/ipcheck', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +106,7 @@ const IPAddressManager = ({ userId, token }) => {
   // Fetch IP addresses from the server
   const fetchIpAddresses = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/ip`, {  // Full URL for local dev
+      const response = await fetch(`http://3.90.69.163:3000/api/ip`, {  // Full URL for local dev
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -129,7 +131,7 @@ const IPAddressManager = ({ userId, token }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/ip`, {  // Full URL for local dev
+      const response = await fetch(`http://3.90.69.163:3000/api/ip`, {  // Full URL for local dev
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -153,7 +155,7 @@ const IPAddressManager = ({ userId, token }) => {
   // Delete an IP address by ID
   const deleteIpAddress = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/ip/${id}`, {  // Correct the DELETE URL
+      const response = await fetch(`http://3.90.69.163:3000/api/ip/${id}`, {  // Correct the DELETE URL
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -200,7 +202,7 @@ const IPAddressManager = ({ userId, token }) => {
                 </button>
                 <button
                 title="IP Manager"
-                  className="rounded-full border-2 text-white px-3 py-2 bg-white bg-opacity-10 text-nowrap"
+                  className="rounded-full border-2 text-white px-[0.65rem] py-2 bg-white bg-opacity-10 text-nowrap"
                   onClick={goToCredentails}
                 >
                   CR
@@ -212,6 +214,9 @@ const IPAddressManager = ({ userId, token }) => {
       </div>
   <div className="min-h-screen bg-[#00021B] px-4 md:px-32 py-2 md:py-8 text-white max-w-full overflow-x-hidden">
     <div className="max-w-6xl mx-auto shadow-md rounded-lg overflow-hidden h-full mt-20">
+    <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mx-auto text-center pt-20 pb-4 md:pt-10 md:pb-16 font-outfit z-50">
+          IP Manager
+        </h1>
       <div className="px-6 py-4 flex justify-between align-middle  border-b ">
         <h2 className="text-xl font-semibold text-white">IP Address Manager</h2>
 

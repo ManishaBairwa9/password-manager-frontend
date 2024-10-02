@@ -46,7 +46,7 @@ const Login = ({ setToken }) => {
             const ip = ipData.ip;
     
             // Make the POST request with email, password, and IP address
-            const response = await fetch('http://localhost:3000/api/auth/login', {
+            const response = await fetch('http://3.90.69.163:3000/api/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

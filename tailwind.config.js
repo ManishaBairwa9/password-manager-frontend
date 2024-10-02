@@ -11,6 +11,7 @@ module.exports = {
       boxShadow: {
         'custom': '4px 4px 52.2px rgba(0, 0, 0, 0.09)',
         'custom-green': '0px 10px 41.8px -2px rgba(99, 228, 0, 0.34)',
+        'custom-white': '0px 21px 100.3px 3px rgba(255, 255, 255, 0.08)',
       },
       backgroundImage: {
         'custom-pattern': "url('./imageforbg.png')",
@@ -23,4 +24,3 @@ module.exports = {
   },
   plugins: [],
 }
-

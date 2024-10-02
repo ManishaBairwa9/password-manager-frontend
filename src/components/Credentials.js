@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FaMoon, FaSun, FaTrash, FaPen, FaSearch } from "react-icons/fa";
+import { FaMoon, FaSun, FaTrash, FaPen, FaSearch, FaUserCog } from "react-icons/fa";
 import { FiEdit, FiTrash, FiLogOut, FiSearch } from "react-icons/fi";
 // import { LuCopy } from "react-icons/lu";
 // import { VscEye } from "react-icons/vsc";
@@ -43,8 +43,6 @@ const Credentials = ({ token }) => {
   const handleClose = () => setOpen(false);
   const [toggleModalPassword, setToggleModalPassword] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [showcheck, setShowCheck] = useState(false);
- 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
@@ -120,10 +118,15 @@ const Credentials = ({ token }) => {
   const goToip = () => {
     navigate("/ip"); // This will navigate to the root route
   };
+
+  const goToGeneratePassword = () => {
+    navigate("/generatepassword");
+  }
+
   const fetchCredentials = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/credentials",
+        "http://3.90.69.163:3000/api/credentials",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -143,7 +146,7 @@ const Credentials = ({ token }) => {
     try {
       if (editingId) {
         await axios.put(
-          `http://localhost:3000/api/credentials/${editingId}`,
+          `http://3.90.69.163:3000/api/credentials/${editingId}`,
           {
             name,
             link,
@@ -157,7 +160,7 @@ const Credentials = ({ token }) => {
         setSnackbarMessage("Successfully Updated!");
       } else {
         await axios.post(
-          "http://localhost:3000/api/credentials",
+          "http://3.90.69.163:3000/api/credentials",
           {
             name,
             link,
@@ -177,7 +180,6 @@ const Credentials = ({ token }) => {
       fetchCredentials();
       setError("");
       handleClose();
-      setShowCheck(prevState => !prevState);
 
     } catch (error) {
       console.error("Error adding/updating credential:", error);
@@ -194,7 +196,7 @@ const Credentials = ({ token }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/credentials/${id}`, {
+      await axios.delete(`http://3.90.69.163:3000/api/credentials/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchCredentials();
@@ -248,9 +250,7 @@ const Credentials = ({ token }) => {
 
   return (
     <>
-    {/* { showcheck && (<div className="absolute top-2/4 left-2/4">
-     <img src={greenCheckGif} alt="Green Check" />
-    </div>) } */}
+
   <style>
         {`
           .MuiSnackbarContent-root {
@@ -302,17 +302,17 @@ const Credentials = ({ token }) => {
          <Input
             color="success"
             disabled={false}
-            placeholder={!isFocused && "Search"}
+            placeholder={!searchTerm && !isFocused && "Search"}
             size="md"
             variant="plain"
             value={searchTerm}
             onChange={handleInputChange} // Track keystrokes
             onFocus={() => setIsFocused(true)} // Set focused to true
             onBlur={() => setIsFocused(false)} // Set focused to false
-            startDecorator={!isFocused && <FiSearch className="text-white text-opacity-50" />}
+            startDecorator={!searchTerm && !isFocused &&  <FiSearch className="text-white text-opacity-50" />}
           />
          </div>
-          
+          <div className="hidden lg:inline-block">
           {darkMode && (
             <button onClick={handleToggle} title="dark theme">
               <FaMoon className="text-white" size={26} />
@@ -323,34 +323,48 @@ const Credentials = ({ token }) => {
               <FaSun className="text-white" size={26}/>
             </button>
           )}
-
+          </div>
           <div className="relative flex items-center justify-center">
             <UserIcon onClick={toggleVisibility} className="w-10 cursor-pointer" />
             {isVisible && (
-              <div className="absolute top-16 flex gap-4 flex-col items-center">
+              <div className="absolute top-16 flex gap-2 flex-col items-center">
                 <button
-                  className="rounded-full border-2 border-gray-400 p-3 bg-[#0D0F27] hover:border-white"
-                  title="logout"
-                  onClick={handleLogout}
+                  className="rounded-full border-2  border-gray-700 hover:border-gray-600 px-4 py-2 bg-[#0D0F27] text-white hover:scale-110 transition-transform duration-600 ease-in-out text-nowrap w-32"
+                  title="Your Account"
                 >
-                  <FiLogOut className="text-white"/>
+                  <FaUserCog className="text-white inline mr-1" size={20}/> Account
                 </button>
                 <button
                 title="IP Manager"
-                  className="rounded-full border-2 text-white border-gray-400 hover:border-white px-3 py-2 bg-[#0D0F27] text-nowrap"
+                  className="rounded-full border-2 text-lg text-white border-gray-700 hover:border-gray-600  px-4 py-2 bg-[#0D0F27] text-nowrap hover:scale-110 transition-transform duration-600 ease-in-out w-32"
                   onClick={goToip}
                 >
-                  I P
+                  IP Manager
                 </button>
+                <button
+                title="Generate Password"
+                  className="rounded-full border-2 text-lg text-white border-gray-700 hover:border-gray-600  px-4 py-2 bg-[#0D0F27] text-nowrap hover:scale-110 transition-transform duration-600 ease-in-out w-32"
+                  onClick={goToGeneratePassword}
+                >
+                  Generate
+                </button>
+                <button
+                  className="rounded-full border-2  border-gray-700 hover:border-gray-600 p-3 text-white bg-[#0D0F27] hover:scale-110 transition-transform duration-600 ease-in-out w-32"
+                  title="Logout"
+                  onClick={handleLogout}
+                >
+                  <FiLogOut className="text-white inline mr-1" size={20}/> Logout
+                </button>
+
               </div>
             )}
           </div>
         </div>
       </div>
-      <div className="min-h-screen bg-[#00021B] px-6 md:px-20 lg:px-32 py-2 md:py-8 text-white max-w-full overflow-x-hidden">
-        <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mx-auto text-center pt-24 pb-6 md:pt-12 md:pb-20 font-outfit z-50">
+      <div className="min-h-screen bg-[#00021B] px-4 py-2 md:px-20 md:py-8 lg:px-40 lg:py-12 text-white max-w-full overflow-x-hidden" onClick={() => { setIsVisible(false)}}>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-medium mx-auto text-center pt-24 pb-6 md:pt-12 md:pb-12 font-outfit z-50">
           Guard your passwords with <br></br>Unbreakable,{" "}
-          <span className="text-[#63E400]">100%</span> End-to-End Encryption.
+          <span className="text-[#63E400]">100%</span> End Encryption.
         </h1>
         <div className="flex justify-center items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-6 gap-x-6 justify-center items-center w-full">
@@ -462,7 +476,7 @@ const Credentials = ({ token }) => {
               filteredCredentials.map((credential) => (
                 <div
                   key={credential.id}
-                  className="overflow-hidden rounded-2xl bg-white border-opacity-60 pl-5 pr-10 py-6 relative bg-opacity-5 border-2 border-gray-700 hover:border-gray-600 min-h-32 hover:scale-105 transition-transform duration-600 ease-in-out "
+                  className="overflow-hidden rounded-2xl bg-white border-opacity-60 pl-5 pr-10 py-6 relative bg-opacity-5 border-2 border-gray-700 hover:border-gray-600 min-h-32 hover:scale-105 transition-transform duration-600 ease-in-out"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <img
@@ -470,7 +484,7 @@ const Credentials = ({ token }) => {
                       alt="Favicon"
                       className="w-6 h-6 mr-2"
                     />
-                    <h3 className="text-lg leading-6 font-medium whitespace-nowrap overflow-hidden text-ellipsis" style={{ display: "block" }}>
+                    <h3 className="text-base lg:text-lg leading-6 font-medium whitespace-nowrap overflow-hidden text-ellipsis" style={{ display: "block" }}>
                     {credential.name.charAt(0).toUpperCase() + credential.name.slice(1)}
                     </h3>
                   </div>
